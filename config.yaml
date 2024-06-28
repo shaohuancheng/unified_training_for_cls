@@ -1,0 +1,70 @@
+# Basic Config
+train_dataset_length: 50000  #5000, 25000, 50000
+val_dataset_length: -1
+test_dataset_length: -1
+continue_train: False
+checkpoint: /root/data/mbart/mbart_layerwise_contrast_two_models/log_lightning/lightning_logs/version_6/checkpoints/epoch=4-step=15625.ckpt
+#Generate Config
+no_repeat_ngram_size: 3
+max_output_len: 128
+num_beams: 4
+alpha: 1
+
+# Dataloader Config
+dataset_path: ../data/zh2en/
+batch_size: 16
+val_batch_size: 48
+test_batch_size: 40
+num_workers: 0
+
+# Log Config
+log_name: mbart_log
+val_save_file: ./evaluation/valid_file
+test_save_file: ./evaluation/test_file
+
+# Datamodule Config
+# Tokenizer
+src_lang: zh_CN  # vi_VN
+tgt_lang: en_XX
+sent_token_len: 768
+ref_token_len: 128
+#add_special_tokens: True
+truncation: True
+padding: max_length #max_length
+return_tensors: pt
+ignore_pad_token_for_loss: True
+#is_longest: True
+# collate fn
+sent_lower_case: True
+mm_lower_case: True
+
+# Model Config    /facebook/mbart-large-cc25
+model_name_or_path: /facebook/mbart-large-cc25
+
+# Optimizer Config
+# Adam / AdamW / Adafactor
+optimizer: AdamW
+learning_rate: 0.00005
+weight_decay: 0
+
+# Trainer Config
+random_seed: 0
+train_params:
+  accelerator: gpu
+  auto_lr_find: False
+  auto_scale_batch_size: False
+  auto_select_gpus: False
+  deterministic: True
+  max_steps: -1
+  max_epochs: 60
+  min_epochs: 3
+  num_sanity_val_steps: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  accumulate_grad_batches: 1
+  gradient_clip_val: 1.0
+  benchmark: False
+  #weights_summary: top
+  val_check_interval: 1.0
+  default_root_dir: ./log_lightning/
